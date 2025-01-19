@@ -189,8 +189,6 @@ public class DriveSubsystem extends SubsystemBase {
         });
   }
 
-
-
   // method used for the drive command, not technically needed but why not
   public void arcadeDrive(double xSpeed, double zRotation) {
     robotDrive.arcadeDrive(xSpeed, zRotation);
