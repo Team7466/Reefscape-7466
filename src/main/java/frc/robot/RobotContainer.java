@@ -35,7 +35,7 @@ public class RobotContainer {
     configureBindings();
 
     m_DriveSubsystem.setDefaultCommand(
-        m_DriveSubsystem.driveCommand(() -> driverXbox.getLeftX(), () -> driverXbox.getRightY()));
+        m_DriveSubsystem.driveCommand(() -> -driverXbox.getLeftY(), () -> -driverXbox.getRightX()));
   }
 
   /**
