@@ -20,6 +20,7 @@ public final class Constants {
   }
 public static class DriveConstants{
 public static final double trackWidthMeters = 0.5308;
+public static final double gearRatio = 8.75;
 }
 
 }
