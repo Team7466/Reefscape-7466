@@ -107,8 +107,7 @@ public class DriveSubsystem extends SubsystemBase {
         this::resetPose, // Method to reset odometry
         this::getCurrentSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
         (speeds, feedforwards) ->
-            driveRobotRelative(
-                speeds), // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds.
+            drive(speeds), // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds.
         // Also optionally outputs individual module feedforwards
         new PPLTVController(
             0.02), // PPLTVController is the path following controller for differential drive
@@ -128,11 +127,6 @@ public class DriveSubsystem extends SubsystemBase {
         );
   }
 
-  private void driveRobotRelative(ChassisSpeeds speeds) {
-
-    throw new UnsupportedOperationException("Unimplemented method 'driveRobotRelative'");
-  }
-
   public Pose2d getPose() {
     return odometry.getPoseMeters();
   }
@@ -143,9 +137,10 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   public ChassisSpeeds getCurrentSpeeds() {
-    DifferentialDriveWheelSpeeds speeds =
-        new DifferentialDriveWheelSpeeds(leftMotor.getEncoder().getVelocity(), 0);
-    return kinematics.toChassisSpeeds(speeds);
+    DifferentialDriveWheelSpeeds currentSpeeds =
+        new DifferentialDriveWheelSpeeds(
+            leftMotor.getEncoder().getVelocity(), rightEncoder.getVelocity());
+    return kinematics.toChassisSpeeds(currentSpeeds);
   }
 
   public DifferentialDriveWheelPositions getCurrentPositions() {
@@ -185,13 +180,15 @@ public class DriveSubsystem extends SubsystemBase {
   public Command driveCommand(DoubleSupplier xSpeed, DoubleSupplier zRotation) {
     return run(
         () -> {
-          robotDrive.arcadeDrive(xSpeed.getAsDouble(), zRotation.getAsDouble());
+          robotDrive.arcadeDrive(xSpeed.getAsDouble(), zRotation.getAsDouble(), true);
         });
   }
 
-  // method used for the drive command, not technically needed but why not
-  public void arcadeDrive(double xSpeed, double zRotation) {
-    robotDrive.arcadeDrive(xSpeed, zRotation);
+  /** drive method for pathplanner */
+  public void drive(ChassisSpeeds speeds) {
+    robotDrive.arcadeDrive(
+        speeds.vxMetersPerSecond / Constants.DriveConstants.maxSpeed,
+        speeds.omegaRadiansPerSecond / 3);
   }
 
   @Override
