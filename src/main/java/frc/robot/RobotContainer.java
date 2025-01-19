@@ -5,10 +5,12 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.*;
+import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
 
 /**
@@ -19,17 +21,26 @@ import frc.robot.subsystems.ExampleSubsystem;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
+  private final DriveSubsystem m_DriveSubsystem = new DriveSubsystem();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
-  private final CommandXboxController m_driverController =
+  private final CommandXboxController driverXbox =
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
+
+  private final CommandXboxController operatorXbox =
+      new CommandXboxController(OperatorConstants.kOperatorControllerPort);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
 
     // Configure the trigger bindings
     configureBindings();
+
+    m_DriveSubsystem.setDefaultCommand(
+      m_DriveSubsystem.driveCommand(
+      () -> driverXbox.getLeftX(), 
+      () -> driverXbox.getRightY())
+      );
   }
 
   /**
@@ -42,13 +53,12 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
-    new Trigger(m_exampleSubsystem::exampleCondition)
-        .onTrue(new ExampleCommand(m_exampleSubsystem));
 
-    // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
-    // cancelling on release.
-    m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
+    // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
+   // new Trigger(m_exampleSubsystem::exampleCondition)
+   //     .onTrue(new ExampleCommand(m_exampleSubsystem));
+
+    driverXbox.b().whileTrue(null);
   }
 
   /**
