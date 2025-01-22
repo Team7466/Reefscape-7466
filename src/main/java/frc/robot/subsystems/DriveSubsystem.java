@@ -71,7 +71,12 @@ public class DriveSubsystem extends SubsystemBase {
      * Set parameters that will apply to all SPARKs. We will also use this as
      * the left leader config.
      */
-    globalConfig.smartCurrentLimit(50).idleMode(IdleMode.kBrake);
+    globalConfig
+        .smartCurrentLimit(45)
+        .idleMode(IdleMode.kBrake)
+        .openLoopRampRate(0.25)
+        .closedLoopRampRate(0.25)
+        .voltageCompensation(12.0);
 
     // Apply the global config and invert since it is on the opposite side
     rightConfig.apply(globalConfig).inverted(true);
