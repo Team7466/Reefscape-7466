@@ -33,8 +33,8 @@ import java.util.function.DoubleSupplier;
 
 public class DriveSubsystem extends SubsystemBase {
 
-  private final DifferentialDriveOdometry odometry;
-  private final AHRS gyro;
+ // private final DifferentialDriveOdometry odometry;
+ // private final AHRS gyro;
   private final SparkMax leftMotor;
   private final SparkMax leftMotorFollower;
   private final SparkMax rightMotor;
@@ -54,7 +54,7 @@ public class DriveSubsystem extends SubsystemBase {
     kinematics = new DifferentialDriveKinematics(Constants.DriveConstants.trackWidthMeters);
 
     // navX Micro using usb
-    gyro = new AHRS(NavXComType.kUSB1, NavXUpdateRate.k50Hz);
+   // gyro = new AHRS(NavXComType.kUSB1, NavXUpdateRate.k50Hz);
 
     // All other subsystem initialization
     leftMotor = new SparkMax(3, MotorType.kBrushless);
@@ -95,9 +95,9 @@ public class DriveSubsystem extends SubsystemBase {
     robotDrive = new DifferentialDrive(leftMotor, rightMotor);
     robotDrive.setSafetyEnabled(false);
 
-    odometry =
+  /*   odometry =
         new DifferentialDriveOdometry(
-            gyro.getRotation2d(), leftEncoder.getPosition(), rightEncoder.getPosition());
+            gyro.getRotation2d(), leftEncoder.getPosition(), rightEncoder.getPosition()); */
 
     try {
       config = RobotConfig.fromGUISettings();
@@ -107,7 +107,7 @@ public class DriveSubsystem extends SubsystemBase {
     }
 
     // Configure AutoBuilder last
-    AutoBuilder.configure(
+   /*  AutoBuilder.configure(
         this::getPose, // Robot pose supplier
         this::resetPose, // Method to reset odometry
         this::getCurrentSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
@@ -129,17 +129,17 @@ public class DriveSubsystem extends SubsystemBase {
           return false;
         },
         this // Reference to this subsystem to set requirements
-        );
+        ); */
   }
 
-  public Pose2d getPose() {
+  /* public Pose2d getPose() {
     return odometry.getPoseMeters();
   }
 
-  public void resetPose(Pose2d pose) {
+   public void resetPose(Pose2d pose) {
     System.out.println(pose);
     odometry.resetPosition(gyro.getRotation2d(), getCurrentPositions(), pose);
-  }
+  } */
 
   public ChassisSpeeds getCurrentSpeeds() {
     DifferentialDriveWheelSpeeds currentSpeeds =
