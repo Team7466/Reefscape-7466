@@ -62,10 +62,10 @@ public class DriveSubsystem extends SubsystemBase {
     rightMotor = new SparkMax(5, MotorType.kBrushless);
     rightMotorFollower = new SparkMax(6, MotorType.kBrushless);
 
-    SparkMaxConfig globalConfig = new SparkMaxConfig();
-    SparkMaxConfig rightConfig = new SparkMaxConfig();
-    SparkMaxConfig leftFollowerConfig = new SparkMaxConfig();
-    SparkMaxConfig rightFollowerConfig = new SparkMaxConfig();
+   globalConfig = new SparkMaxConfig();
+   rightConfig = new SparkMaxConfig();
+   leftFollowerConfig = new SparkMaxConfig();
+   rightFollowerConfig = new SparkMaxConfig();
 
     /*
      * Set parameters that will apply to all SPARKs. We will also use this as
