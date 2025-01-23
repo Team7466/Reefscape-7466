@@ -164,7 +164,7 @@ public class DriveSubsystem extends SubsystemBase {
      * the left leader config.
      */
     globalConfig
-        .smartCurrentLimit(45)
+        .smartCurrentLimit(50)
         .idleMode(IdleMode.kBrake)
         .openLoopRampRate(0.25)
         .closedLoopRampRate(0.25)
