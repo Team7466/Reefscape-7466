@@ -6,6 +6,7 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.button.CommandPS5Controller;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
@@ -26,6 +27,9 @@ public class RobotContainer {
   private final CommandXboxController driverXbox =
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
 
+      private final CommandPS5Controller driverPS =
+      new CommandPS5Controller(OperatorConstants.kDriverControllerPort);
+
   private final CommandXboxController operatorXbox =
       new CommandXboxController(OperatorConstants.kOperatorControllerPort);
 
@@ -36,7 +40,7 @@ public class RobotContainer {
     configureBindings();
 
     m_DriveSubsystem.setDefaultCommand(
-        m_DriveSubsystem.driveCommand(() -> -driverXbox.getLeftY(), () -> -driverXbox.getRightX()));
+        m_DriveSubsystem.driveCommand(() -> -driverPS.getLeftY(), () -> -driverPS.getRightX()));
   }
 
   /**
