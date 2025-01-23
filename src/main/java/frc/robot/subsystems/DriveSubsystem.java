@@ -67,33 +67,16 @@ public class DriveSubsystem extends SubsystemBase {
    leftFollowerConfig = new SparkMaxConfig();
    rightFollowerConfig = new SparkMaxConfig();
 
-    /*
-     * Set parameters that will apply to all SPARKs. We will also use this as
-     * the left leader config.
-     */
-    globalConfig
-        .smartCurrentLimit(45)
-        .idleMode(IdleMode.kBrake)
-        .openLoopRampRate(0.25)
-        .closedLoopRampRate(0.25)
-        .voltageCompensation(12.0);
-
-    // Apply the global config and invert since it is on the opposite side
-    rightConfig.apply(globalConfig).inverted(true);
-
-    // Apply the global config and set the leader SPARK for follower mode
-    leftFollowerConfig.apply(globalConfig).follow(leftMotor);
-
-    // Apply the global config and set the leader SPARK for follower mode
-    rightFollowerConfig.apply(globalConfig).follow(rightMotor);
+   applyConfigs();
 
     leftEncoder = leftMotor.getEncoder();
     rightEncoder = rightMotor.getEncoder();
-
-    configureMotors();
+    
+   configureMotors();
 
     robotDrive = new DifferentialDrive(leftMotor, rightMotor);
     robotDrive.setSafetyEnabled(false);
+    robotDrive.setDeadband(0.04);
 
   /*   odometry =
         new DifferentialDriveOdometry(
@@ -173,6 +156,32 @@ public class DriveSubsystem extends SubsystemBase {
         rightConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     rightMotorFollower.configure(
         rightFollowerConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+  }
+
+  private void applyConfigs(){
+        /*
+     * Set parameters that will apply to all SPARKs. We will also use this as
+     * the left leader config.
+     */
+    globalConfig
+        .smartCurrentLimit(45)
+        .idleMode(IdleMode.kBrake)
+        .openLoopRampRate(0.25)
+        .closedLoopRampRate(0.25)
+        .voltageCompensation(12.0);
+        
+    globalConfig.encoder
+    .velocityConversionFactor(Constants.DriveConstants.velocityConversionFactor)
+    .positionConversionFactor(Constants.DriveConstants.positionConversionFactor); 
+
+    // Apply the global config and invert since it is on the opposite side
+    rightConfig.apply(globalConfig).inverted(true);
+
+    // Apply the global config and set the leader SPARK for follower mode
+    leftFollowerConfig.apply(globalConfig).follow(leftMotor);
+
+    // Apply the global config and set the leader SPARK for follower mode
+    rightFollowerConfig.apply(globalConfig).follow(rightMotor);
   }
 
   /**
