@@ -62,17 +62,17 @@ public class DriveSubsystem extends SubsystemBase {
     rightMotor = new SparkMax(5, MotorType.kBrushless);
     rightMotorFollower = new SparkMax(6, MotorType.kBrushless);
 
-   globalConfig = new SparkMaxConfig();
-   rightConfig = new SparkMaxConfig();
-   leftFollowerConfig = new SparkMaxConfig();
-   rightFollowerConfig = new SparkMaxConfig();
+    globalConfig = new SparkMaxConfig();
+    rightConfig = new SparkMaxConfig();
+    leftFollowerConfig = new SparkMaxConfig();
+    rightFollowerConfig = new SparkMaxConfig();
 
-   setConfigs();
+    setConfigs();
 
     leftEncoder = leftMotor.getEncoder();
     rightEncoder = rightMotor.getEncoder();
-    
-   applyConfigs();
+
+    applyConfigs();
 
     robotDrive = new DifferentialDrive(leftMotor, rightMotor);
     robotDrive.setSafetyEnabled(false);
@@ -80,7 +80,7 @@ public class DriveSubsystem extends SubsystemBase {
 
     odometry =
         new DifferentialDriveOdometry(
-            gyro.getRotation2d(), leftEncoder.getPosition(), rightEncoder.getPosition()); 
+            gyro.getRotation2d(), leftEncoder.getPosition(), rightEncoder.getPosition());
 
     try {
       config = RobotConfig.fromGUISettings();
@@ -90,7 +90,7 @@ public class DriveSubsystem extends SubsystemBase {
     }
 
     // Configure AutoBuilder last
-     AutoBuilder.configure(
+    AutoBuilder.configure(
         this::getPose, // Robot pose supplier
         this::resetPose, // Method to reset odometry
         this::getCurrentSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
@@ -112,17 +112,17 @@ public class DriveSubsystem extends SubsystemBase {
           return false;
         },
         this // Reference to this subsystem to set requirements
-        ); 
+        );
   }
 
-   public Pose2d getPose() {
+  public Pose2d getPose() {
     return odometry.getPoseMeters();
   }
 
-   public void resetPose(Pose2d pose) {
+  public void resetPose(Pose2d pose) {
     System.out.println(pose);
     odometry.resetPosition(gyro.getRotation2d(), getCurrentPositions(), pose);
-  } 
+  }
 
   public ChassisSpeeds getCurrentSpeeds() {
     DifferentialDriveWheelSpeeds currentSpeeds =
@@ -140,12 +140,11 @@ public class DriveSubsystem extends SubsystemBase {
   /**
    * Method to Apply the configuration to the SPARKs.
    *
-   * kResetSafeParameters is used to get the SPARK MAX to a known state. This
-   * is useful in case the SPARK MAX is replaced.
+   * <p>kResetSafeParameters is used to get the SPARK MAX to a known state. This is useful in case
+   * the SPARK MAX is replaced.
    *
-   * kPersistParameters is used to ensure the configuration is not lost when
-   * the SPARK MAX loses power. This is useful for power cycles that may occur
-   * mid-operation.
+   * <p>kPersistParameters is used to ensure the configuration is not lost when the SPARK MAX loses
+   * power. This is useful for power cycles that may occur mid-operation.
    */
   private void applyConfigs() {
     leftMotor.configure(
@@ -158,22 +157,21 @@ public class DriveSubsystem extends SubsystemBase {
         rightFollowerConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
   }
 
-
   /**
-   * Set parameters that will apply to all SPARKs. We will also use this as
-   * the left leader config.
+   * Set parameters that will apply to all SPARKs. We will also use this as the left leader config.
    */
-  private void setConfigs(){
+  private void setConfigs() {
     globalConfig
         .smartCurrentLimit(50)
         .idleMode(IdleMode.kBrake)
         .openLoopRampRate(0.25)
         .closedLoopRampRate(0.25)
         .voltageCompensation(12.0);
-        
-    globalConfig.encoder
-    .velocityConversionFactor(Constants.DriveConstants.velocityConversionFactor)
-    .positionConversionFactor(Constants.DriveConstants.positionConversionFactor); 
+
+    globalConfig
+        .encoder
+        .velocityConversionFactor(Constants.DriveConstants.velocityConversionFactor)
+        .positionConversionFactor(Constants.DriveConstants.positionConversionFactor);
 
     // Apply the global config and invert since it is on the opposite side
     rightConfig.apply(globalConfig).inverted(true);
@@ -198,13 +196,12 @@ public class DriveSubsystem extends SubsystemBase {
           robotDrive.arcadeDrive(xSpeed.getAsDouble(), zRotation.getAsDouble(), true);
         });
   }
-  
 
   /** drive method for pathplanner */
   public void drive(ChassisSpeeds speeds) {
     robotDrive.arcadeDrive(
         speeds.vxMetersPerSecond / Constants.DriveConstants.maxSpeed,
-        speeds.omegaRadiansPerSecond / 3);
+        speeds.omegaRadiansPerSecond / 6);
   }
 
   @Override

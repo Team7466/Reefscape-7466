@@ -5,6 +5,7 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandPS5Controller;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -27,11 +28,13 @@ public class RobotContainer {
   private final CommandXboxController driverXbox =
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
 
-      private final CommandPS5Controller driverPS =
+  private final CommandPS5Controller driverPS =
       new CommandPS5Controller(OperatorConstants.kDriverControllerPort);
 
   private final CommandXboxController operatorXbox =
       new CommandXboxController(OperatorConstants.kOperatorControllerPort);
+
+  private double speed = 1.0;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -40,7 +43,8 @@ public class RobotContainer {
     configureBindings();
 
     m_DriveSubsystem.setDefaultCommand(
-        m_DriveSubsystem.driveCommand(() -> -driverPS.getLeftY(), () -> -driverPS.getRightX()));
+        m_DriveSubsystem.driveCommand(
+            () -> speed * -driverPS.getLeftY(), () -> -driverPS.getRightX()));
   }
 
   /**
@@ -53,12 +57,10 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
+    ;
 
-    // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
-    // new Trigger(m_exampleSubsystem::exampleCondition)
-    //     .onTrue(new ExampleCommand(m_exampleSubsystem));
-
-   // driverXbox.b().whileTrue(null);
+    driverPS.R1().whileTrue(Commands.run(() -> speed = 0.6));
+    driverPS.R1().onFalse(Commands.run(() -> speed = 1.0));
   }
 
   /**
