@@ -23,7 +23,7 @@ public final class Constants {
   public static class DriveConstants {
     public static final double trackWidthMeters = 0.5308; // meters
     public static final double gearRatio = 10.71;
-    public static final double maxSpeed = 4.20; // meters per second
+    public static final double maxSpeed = 4.23; // meters per second
     public static final double wheelCircumference = (6 * Math.PI);
     public static final double velocityConversionFactor = Units.inchesToMeters((1.0/gearRatio)*(wheelCircumference)/ 60.0); 
     public static final double positionConversionFactor = Units.inchesToMeters(1.0/gearRatio)*(wheelCircumference);  
