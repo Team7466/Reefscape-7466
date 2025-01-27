@@ -57,7 +57,6 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    ;
 
     driverPS.R1().whileTrue(Commands.run(() -> speed = 0.6));
     driverPS.R1().onFalse(Commands.run(() -> speed = 1.0));
