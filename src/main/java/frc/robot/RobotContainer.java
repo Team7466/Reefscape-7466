@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.*;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.Elevator;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -23,6 +24,7 @@ import frc.robot.subsystems.DriveSubsystem;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final DriveSubsystem m_DriveSubsystem = new DriveSubsystem();
+  private final Elevator m_Elevator = new Elevator();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController driverXbox =

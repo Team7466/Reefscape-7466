@@ -17,6 +17,7 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 import com.studica.frc.AHRS;
 import com.studica.frc.AHRS.NavXComType;
 import com.studica.frc.AHRS.NavXUpdateRate;
+import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
@@ -31,6 +32,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import java.util.function.DoubleSupplier;
 
+@Logged
 public class DriveSubsystem extends SubsystemBase {
 
   private final DifferentialDriveOdometry odometry;
@@ -57,21 +59,20 @@ public class DriveSubsystem extends SubsystemBase {
     gyro = new AHRS(NavXComType.kUSB1, NavXUpdateRate.k50Hz);
 
     // All other subsystem initialization
-    leftMotor = new SparkMax(3, MotorType.kBrushless);
-    leftMotorFollower = new SparkMax(4, MotorType.kBrushless);
-    rightMotor = new SparkMax(5, MotorType.kBrushless);
-    rightMotorFollower = new SparkMax(6, MotorType.kBrushless);
+    leftMotor = new SparkMax(Constants.DriveConstants.leftMotor, MotorType.kBrushless);
+    leftMotorFollower = new SparkMax(Constants.DriveConstants.leftFollower, MotorType.kBrushless);
+    rightMotor = new SparkMax(Constants.DriveConstants.rightMotor, MotorType.kBrushless);
+    rightMotorFollower = new SparkMax(Constants.DriveConstants.rightFollower, MotorType.kBrushless);
 
     globalConfig = new SparkMaxConfig();
     rightConfig = new SparkMaxConfig();
     leftFollowerConfig = new SparkMaxConfig();
     rightFollowerConfig = new SparkMaxConfig();
 
-    setConfigs();
-
     leftEncoder = leftMotor.getEncoder();
     rightEncoder = rightMotor.getEncoder();
 
+    setConfigs();
     applyConfigs();
 
     robotDrive = new DifferentialDrive(leftMotor, rightMotor);
@@ -172,6 +173,12 @@ public class DriveSubsystem extends SubsystemBase {
         .encoder
         .velocityConversionFactor(Constants.DriveConstants.velocityConversionFactor)
         .positionConversionFactor(Constants.DriveConstants.positionConversionFactor);
+
+    globalConfig
+        .signals
+        .primaryEncoderPositionPeriodMs(20)
+        .primaryEncoderVelocityPeriodMs(20)
+        .appliedOutputPeriodMs(5);
 
     // Apply the global config and invert since it is on the opposite side
     rightConfig.apply(globalConfig).inverted(true);
