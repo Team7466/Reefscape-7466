@@ -35,4 +35,9 @@ public final class Constants {
     public static final double positionConversionFactor =
         Units.inchesToMeters(1.0 / gearRatio) * (wheelCircumference);
   }
+
+  public static class ElevatorConstants {
+    public static final int elevMotor = 8; // CAN ID
+    public static final int elevFollower = 9; // CAN ID
+  }
 }

@@ -28,8 +28,8 @@ public class Elevator extends SubsystemBase {
 
   public Elevator() {
 
-    elevMotor = new SparkMax(7, MotorType.kBrushless);
-    elevFollower = new SparkMax(8, MotorType.kBrushless);
+    elevMotor = new SparkMax(Constants.ElevatorConstants.elevMotor, MotorType.kBrushless);
+    elevFollower = new SparkMax(Constants.ElevatorConstants.elevFollower, MotorType.kBrushless);
 
     elevConfig = new SparkMaxConfig();
     elevFollowerConfig = new SparkMaxConfig();
