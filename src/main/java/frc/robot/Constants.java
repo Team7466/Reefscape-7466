@@ -42,4 +42,16 @@ public final class Constants {
     public static final int elevMotor = 8; // CAN ID
     public static final int elevFollower = 9; // CAN ID
   }
+
+  public static class EndEffectorConstants {
+    public static final int endEffectorMotor = 10; // CAN ID
+  }
+
+  public static class IntakeConstants {
+    public static final int intakeMotor = 11; // CAN ID
+  }
+
+  public static class DealgaefierConstants {
+    public static final int dealgaefierMotor = 12; // CAN ID
+  }
 }

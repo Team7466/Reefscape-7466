@@ -12,8 +12,11 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.*;
+import frc.robot.subsystems.Dealgaefier;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.Elevator;
+import frc.robot.subsystems.EndEffector;
+import frc.robot.subsystems.Intake;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -25,6 +28,9 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final DriveSubsystem m_DriveSubsystem = new DriveSubsystem();
   private final Elevator m_Elevator = new Elevator();
+  private final EndEffector m_EndEffector = new EndEffector();
+  private final Intake m_Intake = new Intake();
+  private final Dealgaefier m_Dealgaefier = new Dealgaefier();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController driverXbox =
@@ -47,6 +53,8 @@ public class RobotContainer {
     m_DriveSubsystem.setDefaultCommand(
         m_DriveSubsystem.driveCommand(
             () -> speed * -driverPS.getLeftY(), () -> -driverPS.getRightX()));
+
+    m_Elevator.setDefaultCommand(m_Elevator.run(() -> m_Elevator.elevHold()));
   }
 
   /**
