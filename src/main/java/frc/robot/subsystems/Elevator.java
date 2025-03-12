@@ -17,11 +17,13 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.math.controller.ElevatorFeedforward;
+import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Constants.ElevatorConstants;
 
-@Logged
+
 public class Elevator extends SubsystemBase {
 
   private final SparkMax elevMotor;
@@ -31,10 +33,17 @@ public class Elevator extends SubsystemBase {
   private RelativeEncoder throughbEncoder;
   private SparkClosedLoopController elevController;
   private ElevatorFeedforward feedforward;
-  private static double kS = 0.0;
-  private static double kG = 0.2;
-  private static double kV = 0.0;
+  private double kP = 0.1;
+  private double kD = 0.0;
+  private double kS = 0.0;
+  private double kG = 0.2;
+  private double kV = 0.0;
   private static double setpoint;
+  public static final String kP_Key = "elev_kP";
+  public static final String kD_Key = "elev_kD";
+  public static final String kS_Key = "kS";
+  public static final String kG_Key = "kG";
+
 
   public Elevator() {
 
@@ -50,6 +59,10 @@ public class Elevator extends SubsystemBase {
 
     setConfigs();
     applyConfigs();
+    Preferences.initDouble(kP_Key, kP);
+    Preferences.initDouble(kD_Key, kD);
+    Preferences.initDouble(kS_Key, kS);
+    Preferences.initDouble(kG_Key, kG);
   }
 
   public void elevSet(double elevHeight) {
@@ -112,9 +125,9 @@ public class Elevator extends SubsystemBase {
         .feedbackSensor(FeedbackSensor.kAlternateOrExternalEncoder)
         // Set PID values for position control. We don't need to pass a closed loop
         // slot, as it will default to slot 0.
-        .p(0.1)
+        .p(kP)
         .i(0)
-        .d(0)
+        .d(kD)
         .outputRange(-0.3, 0.3);
 
     elevConfig
@@ -130,14 +143,24 @@ public class Elevator extends SubsystemBase {
     elevFollowerConfig.apply(elevConfig).follow(elevMotor);
   }
 
+
+
+
   @Override
   public void periodic() {
+    if (kP != Preferences.getDouble(kP_Key, kP)) {
+      kP = Preferences.getDouble(kP_Key, kP); 
+    }
+    if (kD != Preferences.getDouble(kD_Key, kD)) {
+      kD = Preferences.getDouble(kD_Key, kD); 
+    }
     // Display the applied output of the left and right side onto the dashboard
     SmartDashboard.putNumber("Elev Out", elevMotor.getAppliedOutput());
     SmartDashboard.putNumber("Elev Position", throughbEncoder.getPosition());
     SmartDashboard.putNumber("Elev Setpoint", setpoint);
     SmartDashboard.putNumber("Elev output amps", elevMotor.getOutputCurrent());
-    SmartDashboard.putNumber("Elev temp", elevMotor.getMotorTemperature());
+    SmartDashboard.putNumber("elev kp", kP);
+    SmartDashboard.putNumber("elev kd", kD);
     // This method will be called once per scheduler run
   }
 }
