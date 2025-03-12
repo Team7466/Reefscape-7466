@@ -27,17 +27,17 @@ public final class Constants {
     public static final int rightFollower = 6; // CAN ID
 
     public static final double trackWidthMeters = 0.5308; // meters
-    public static final double gearRatio = 10.71;
+    public static final double gearRatio = 10.71428;
     public static final double maxSpeed = 4.23; // meters per second
-    public static final double wheelCircumference = (6 * Math.PI);
+    public static final double wheelCircumference = Units.inchesToMeters(6 * Math.PI);
     public static final double velocityConversionFactor =
-        Units.inchesToMeters((1.0 / gearRatio) * (wheelCircumference) / 60.0);
+        (1.0 / gearRatio) * (wheelCircumference) / 60.0;
     public static final double positionConversionFactor =
-        Units.inchesToMeters(1.0 / gearRatio) * (wheelCircumference);
+        (1.0 / gearRatio) * (wheelCircumference);
   }
 
   public static class ElevatorConstants {
-    public static final double positionConversionFactor = 1.0;
+    public static final double positionConversionFactor = 0.1029;
     public static final double velocityConversionFactor = 1.0;
     public static final int elevMotor = 8; // CAN ID
     public static final int elevFollower = 9; // CAN ID
