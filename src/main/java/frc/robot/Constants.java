@@ -37,7 +37,7 @@ public final class Constants {
   }
 
   public static class ElevatorConstants {
-    public static final double positionConversionFactor = 0.1029;
+    public static final double positionConversionFactor = 10.29 ; // cm per rotation;
     public static final double velocityConversionFactor = 1.0;
     public static final int elevMotor = 8; // CAN ID
     public static final int elevFollower = 9; // CAN ID
