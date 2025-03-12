@@ -163,7 +163,7 @@ public class DriveSubsystem extends SubsystemBase {
     globalConfig
         .smartCurrentLimit(50)
         .idleMode(IdleMode.kBrake)
-        .openLoopRampRate(0.25)
+        .openLoopRampRate(0.2)
         .closedLoopRampRate(0.25)
         .voltageCompensation(12.0);
 

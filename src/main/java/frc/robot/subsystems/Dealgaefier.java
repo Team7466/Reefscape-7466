@@ -34,7 +34,7 @@ public class Dealgaefier extends SubsystemBase {
     motorConfig
         .smartCurrentLimit(30) // Lower for brushed motor
         .idleMode(IdleMode.kBrake)
-        .openLoopRampRate(0.25)
+        .openLoopRampRate(0.2)
         .voltageCompensation(12.0);
 
     motorConfig

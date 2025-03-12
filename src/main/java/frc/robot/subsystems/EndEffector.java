@@ -33,7 +33,7 @@ public class EndEffector extends SubsystemBase {
     motorConfig
         .smartCurrentLimit(50)
         .idleMode(IdleMode.kBrake)
-        .openLoopRampRate(0.15)
+        .openLoopRampRate(0.1)
         .voltageCompensation(12.0);
 
     motorConfig
