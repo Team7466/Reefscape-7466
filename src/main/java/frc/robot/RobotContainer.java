@@ -54,7 +54,7 @@ public class RobotContainer {
         m_DriveSubsystem.driveCommand(
             () -> speed * -driverPS.getLeftY(), () -> -driverPS.getRightX()));
 
-    m_Elevator.setDefaultCommand(m_Elevator.run(() -> m_Elevator.elevHold()));
+    m_Elevator.setDefaultCommand(m_Elevator.run(() -> m_Elevator.elevStop()));
     m_EndEffector.setDefaultCommand(m_EndEffector.run(() -> m_EndEffector.stop()));
     m_Dealgaefier.setDefaultCommand(m_Dealgaefier.run(() -> m_Dealgaefier.stop()));
     m_Intake.setDefaultCommand(m_Intake.run(() -> m_Intake.stop()));
@@ -77,6 +77,8 @@ public class RobotContainer {
     operatorXbox.b().whileTrue(m_Intake.run(() -> m_Intake.set(0.5)));
     operatorXbox.y().whileTrue(m_Dealgaefier.run(() -> m_Dealgaefier.set(0.5)));
     operatorXbox.x().whileTrue(m_EndEffector.run(() -> m_EndEffector.set(0.5)));
+    operatorXbox.povUp().whileTrue(m_Elevator.run(() -> m_Elevator.elevUp()));
+    operatorXbox.povDown().whileTrue(m_Elevator.run(() -> m_Elevator.elevUp()));
   }
 
   /**
