@@ -32,7 +32,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import java.util.function.DoubleSupplier;
 
-@Logged
 public class DriveSubsystem extends SubsystemBase {
 
   private final DifferentialDriveOdometry odometry;
