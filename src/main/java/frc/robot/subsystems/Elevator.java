@@ -15,14 +15,11 @@ import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
-import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.Constants.ElevatorConstants;
-
 
 public class Elevator extends SubsystemBase {
 
@@ -43,7 +40,6 @@ public class Elevator extends SubsystemBase {
   public static final String kD_Key = "elev_kD";
   public static final String kS_Key = "kS";
   public static final String kG_Key = "kG";
-
 
   public Elevator() {
 
@@ -143,16 +139,13 @@ public class Elevator extends SubsystemBase {
     elevFollowerConfig.apply(elevConfig).follow(elevMotor);
   }
 
-
-
-
   @Override
   public void periodic() {
     if (kP != Preferences.getDouble(kP_Key, kP)) {
-      kP = Preferences.getDouble(kP_Key, kP); 
+      kP = Preferences.getDouble(kP_Key, kP);
     }
     if (kD != Preferences.getDouble(kD_Key, kD)) {
-      kD = Preferences.getDouble(kD_Key, kD); 
+      kD = Preferences.getDouble(kD_Key, kD);
     }
     // Display the applied output of the left and right side onto the dashboard
     SmartDashboard.putNumber("Elev Out", elevMotor.getAppliedOutput());
