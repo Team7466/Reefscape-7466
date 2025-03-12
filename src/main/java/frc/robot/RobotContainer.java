@@ -73,6 +73,7 @@ public class RobotContainer {
 
     driverPS.R1().whileTrue(Commands.run(() -> speed = 0.6));
     driverPS.R1().onFalse(Commands.run(() -> speed = 1.0));
+    driverPS.triangle().whileTrue(m_Elevator.run(() -> m_Elevator.elevVoltage(0.1)));
     operatorXbox.a().onTrue(m_Elevator.run(() -> m_Elevator.elevSet(10.29)));
     operatorXbox.b().whileTrue(m_Intake.run(() -> m_Intake.set(0.5)));
     operatorXbox.y().whileTrue(m_Dealgaefier.run(() -> m_Dealgaefier.set(0.5)));
