@@ -48,6 +48,7 @@ public final class Constants {
 
   public static class IntakeConstants {
     public static final int intakeMotor = 11; // CAN ID
+    public static int beamBreak = 2; // DIO
   }
 
   public static class DealgaefierConstants {

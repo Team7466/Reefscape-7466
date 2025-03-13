@@ -33,7 +33,7 @@ public class Elevator extends SubsystemBase {
   private double kP = 0.1;
   private double kD = 0.0;
   private double kS = 0.0;
-  private double kG = 0.2;
+  private double kG = 0.125;
   private double kV = 0.0;
   private static double setpoint;
   public static final String kP_Key = "elev_kP";
@@ -114,7 +114,11 @@ public class Elevator extends SubsystemBase {
         .velocityConversionFactor(Constants.ElevatorConstants.velocityConversionFactor)
         .positionConversionFactor(Constants.ElevatorConstants.positionConversionFactor);
 
-    elevConfig.alternateEncoder.countsPerRevolution(8192);
+    elevConfig
+        .alternateEncoder
+        .countsPerRevolution(8192)
+        .velocityConversionFactor(Constants.ElevatorConstants.velocityConversionFactor)
+        .positionConversionFactor(Constants.ElevatorConstants.positionConversionFactor);
 
     elevConfig
         .closedLoop
@@ -135,6 +139,13 @@ public class Elevator extends SubsystemBase {
         .externalOrAltEncoderPosition(5)
         .primaryEncoderPositionPeriodMs(500)
         .primaryEncoderVelocityPeriodMs(500);
+
+    elevConfig
+        .softLimit
+        .reverseSoftLimitEnabled(true)
+        .forwardSoftLimitEnabled(true)
+        .reverseSoftLimit(0.0)
+        .forwardSoftLimit(65.0);
 
     elevFollowerConfig.apply(elevConfig).follow(elevMotor);
   }
