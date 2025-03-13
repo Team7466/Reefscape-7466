@@ -150,6 +150,10 @@ public class Elevator extends SubsystemBase {
     elevFollowerConfig.apply(elevConfig).follow(elevMotor);
   }
 
+  public double getPosition() {
+    return throughbEncoder.getPosition();
+  }
+
   @Override
   public void periodic() {
     if (kP != Preferences.getDouble(kP_Key, kP)) {
@@ -160,7 +164,7 @@ public class Elevator extends SubsystemBase {
     }
     // Display the applied output of the left and right side onto the dashboard
     SmartDashboard.putNumber("Elev Out", elevMotor.getAppliedOutput());
-    SmartDashboard.putNumber("Elev Position", throughbEncoder.getPosition());
+    SmartDashboard.putNumber("Elev Position", getPosition());
     SmartDashboard.putNumber("Elev Setpoint", setpoint);
     SmartDashboard.putNumber("Elev output amps", elevMotor.getOutputCurrent());
     SmartDashboard.putNumber("elev kp", kP);

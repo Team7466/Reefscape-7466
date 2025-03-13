@@ -4,6 +4,9 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.auto.NamedCommands;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -44,8 +47,13 @@ public class RobotContainer {
 
   private double speed = 1.0;
 
+  // Auto selector
+  SendableChooser<Command> m_chooser = new SendableChooser<>();
+
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+    // Register named commands for PathPlanner
+    registerNamedCommands();
 
     // Configure the trigger bindings
     configureBindings();
@@ -58,6 +66,70 @@ public class RobotContainer {
     m_EndEffector.setDefaultCommand(m_EndEffector.run(() -> m_EndEffector.stop()));
     m_Dealgaefier.setDefaultCommand(m_Dealgaefier.run(() -> m_Dealgaefier.stop()));
     m_Intake.setDefaultCommand(m_Intake.run(() -> m_Intake.stop()));
+
+    // Setup auto chooser
+    setupAutoChooser();
+  }
+
+  /** Register named commands for use with PathPlanner */
+  private void registerNamedCommands() {
+    // Register intake command
+    NamedCommands.registerCommand(
+        "runIntake",
+        m_Intake
+            .run(() -> m_Intake.set(0.7))
+            .until(() -> m_Intake.isCoralInside())
+            .andThen(m_Intake.run(() -> m_Intake.stop())));
+
+    // Register elevator to mid height command
+    NamedCommands.registerCommand(
+        "elevatorToMid",
+        m_Elevator
+            .run(() -> m_Elevator.elevSet(10.29))
+            .until(() -> Math.abs(m_Elevator.getPosition() - 10.29) < 0.5));
+
+    // Register elevator to high height command
+    NamedCommands.registerCommand(
+        "elevatorToHigh",
+        m_Elevator
+            .run(() -> m_Elevator.elevSet(60.0))
+            .until(() -> Math.abs(m_Elevator.getPosition() - 60.0) < 0.5));
+
+    // Register end effector activation command
+    NamedCommands.registerCommand(
+        "activateEndEffector",
+        m_EndEffector
+            .run(() -> m_EndEffector.set(0.7))
+            .withTimeout(0.5)
+            .andThen(m_EndEffector.run(() -> m_EndEffector.stop())));
+
+    // Register dealgaefier activation command
+    NamedCommands.registerCommand(
+        "activateDealgaefier",
+        m_Dealgaefier
+            .run(() -> m_Dealgaefier.set(0.7))
+            .withTimeout(0.5)
+            .andThen(m_Dealgaefier.run(() -> m_Dealgaefier.stop())));
+
+    // Register elevator to home position command
+    NamedCommands.registerCommand(
+        "elevatorToHome",
+        m_Elevator
+            .run(() -> m_Elevator.elevSet(0.0))
+            .until(() -> Math.abs(m_Elevator.getPosition()) < 0.5));
+  }
+
+  /** Setup autonomous command chooser */
+  private void setupAutoChooser() {
+    // Set default auto
+    m_chooser.setDefaultOption("Do Nothing", new WaitCommand(10));
+    SmartDashboard.putData("OTONOM", m_chooser);
+
+    // Add PathPlanner auto paths
+    m_chooser.addOption("Middle Path", m_DriveSubsystem.getAutonomousCommand("Middle Path"));
+    m_chooser.addOption("Left Path", m_DriveSubsystem.getAutonomousCommand("Left Path"));
+    m_chooser.addOption("Right Path", m_DriveSubsystem.getAutonomousCommand("Right Path"));
+    m_chooser.addOption("Two Piece Path", m_DriveSubsystem.getAutonomousCommand("Two Piece Path"));
   }
 
   /**
@@ -79,10 +151,13 @@ public class RobotContainer {
     operatorXbox.b().onTrue(m_Elevator.run(() -> m_Elevator.elevSet(10.29)));
     operatorXbox.y().onTrue(m_Elevator.run(() -> m_Elevator.elevSet(60.0)));
 
-    operatorXbox.leftBumper().whileTrue(
-      m_Intake.run(() -> m_Intake.set(0.7))
-      .until(() -> m_Intake.isCoralInside())
-      .andThen(m_Intake.run(() -> m_Intake.stop())));
+    operatorXbox
+        .leftBumper()
+        .whileTrue(
+            m_Intake
+                .run(() -> m_Intake.set(0.7))
+                .until(() -> m_Intake.isCoralInside())
+                .andThen(m_Intake.run(() -> m_Intake.stop())));
     operatorXbox.x().whileTrue(m_Dealgaefier.run(() -> m_Dealgaefier.set(0.7)));
     operatorXbox.rightBumper().whileTrue(m_EndEffector.run(() -> m_EndEffector.set(0.7)));
     operatorXbox.povUp().whileTrue(m_Elevator.run(() -> m_Elevator.elevUp()));
@@ -95,7 +170,7 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    // An example command will be run in autonomous
-    return new WaitCommand(1);
+    // Get selected auto command from chooser
+    return m_chooser.getSelected();
   }
 }

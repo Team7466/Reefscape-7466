@@ -5,6 +5,7 @@
 package frc.robot.subsystems;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPLTVController;
 import com.revrobotics.RelativeEncoder;
@@ -207,6 +208,10 @@ public class DriveSubsystem extends SubsystemBase {
     robotDrive.arcadeDrive(
         speeds.vxMetersPerSecond / Constants.DriveConstants.maxSpeed,
         speeds.omegaRadiansPerSecond / 6);
+  }
+
+  public Command getAutonomousCommand(String string) {
+    return new PathPlannerAuto(string);
   }
 
   @Override
