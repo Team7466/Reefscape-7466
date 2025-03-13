@@ -6,6 +6,7 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.IntakeConstants;
@@ -13,9 +14,11 @@ import frc.robot.Constants.IntakeConstants;
 public class Intake extends SubsystemBase {
   private final SparkMax intakeMotor;
   private SparkMaxConfig motorConfig;
+  private DigitalInput beamBreak;
 
   public Intake() {
     intakeMotor = new SparkMax(IntakeConstants.intakeMotor, MotorType.kBrushless);
+    beamBreak = new DigitalInput(IntakeConstants.beamBreak);
     motorConfig = new SparkMaxConfig();
 
     setConfigs();
@@ -43,6 +46,10 @@ public class Intake extends SubsystemBase {
         .primaryEncoderVelocityPeriodMs(20);
   }
 
+  public boolean isCoralInside() {
+    return !beamBreak.get();
+  }
+
   public void set(double speed) {
     intakeMotor.set(speed);
   }
@@ -55,5 +62,6 @@ public class Intake extends SubsystemBase {
   public void periodic() {
     SmartDashboard.putNumber("Intake Output", intakeMotor.getAppliedOutput());
     SmartDashboard.putNumber("Intake Current", intakeMotor.getOutputCurrent());
+    SmartDashboard.putBoolean("Coral", isCoralInside());
   }
 }
