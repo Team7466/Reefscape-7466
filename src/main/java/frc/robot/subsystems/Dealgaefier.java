@@ -10,51 +10,29 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DealgaefierConstants;
+import com.ctre.phoenix.motorcontrol.*;
+import com.ctre.phoenix.motorcontrol.can.*;
+import com.ctre.phoenix.motorcontrol.VictorSPXControlMode;
 
 public class Dealgaefier extends SubsystemBase {
-  private final SparkMax dealgaefierMotor;
-  private SparkMaxConfig motorConfig;
+  private VictorSPX redLine;
 
   public Dealgaefier() {
-    dealgaefierMotor = new SparkMax(DealgaefierConstants.dealgaefierMotor, MotorType.kBrushed);
-    motorConfig = new SparkMaxConfig();
-
-    setConfigs();
-    applyConfigs();
+    redLine = new VictorSPX(DealgaefierConstants.dealgaefierMotor);
   }
 
-  /** Method to Apply the configuration to the SPARK. */
-  private void applyConfigs() {
-    dealgaefierMotor.configure(
-        motorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-  }
-
-  /** Set parameters for the SPARK. */
-  private void setConfigs() {
-    motorConfig
-        .smartCurrentLimit(30) // Lower for brushed motor
-        .idleMode(IdleMode.kBrake)
-        .openLoopRampRate(0.2)
-        .voltageCompensation(12.0);
-
-    motorConfig
-        .signals
-        .appliedOutputPeriodMs(20)
-        .primaryEncoderPositionPeriodMs(500)
-        .primaryEncoderVelocityPeriodMs(20);
-  }
+  
 
   public void set(double speed) {
-    dealgaefierMotor.set(speed);
+    redLine.set(VictorSPXControlMode.PercentOutput, speed);
   }
 
   public void stop() {
-    dealgaefierMotor.set(0);
+    redLine.set(0);
   }
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("Dealgaefier Output", dealgaefierMotor.getAppliedOutput());
-    SmartDashboard.putNumber("Dealgaefier Current", dealgaefierMotor.getOutputCurrent());
+    SmartDashboard.putNumber("Dealgaefier Output", dealgaefierMotor.getMotorOutputPercent());
   }
 }
