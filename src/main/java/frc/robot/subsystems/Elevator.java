@@ -165,7 +165,6 @@ public class Elevator extends SubsystemBase {
     SmartDashboard.putNumber("Elev output amps", elevMotor.getOutputCurrent());
     SmartDashboard.putNumber("elev kp", kP);
     SmartDashboard.putNumber("elev kd", kD);
-    SmartDashboard.putNumber("elev setpoint", setpoint);
     // This method will be called once per scheduler run
   }
 }
