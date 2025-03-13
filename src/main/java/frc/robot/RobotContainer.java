@@ -86,14 +86,14 @@ public class RobotContainer {
         "elevatorToMid",
         m_Elevator
             .run(() -> m_Elevator.elevSet(10.29))
-            .until(() -> Math.abs(m_Elevator.getPosition() - 10.29) < 0.5));
+            .until(() -> Math.abs(m_Elevator.getPosition() - 10.29) < 0.3));
 
     // Register elevator to high height command
     NamedCommands.registerCommand(
         "elevatorToHigh",
         m_Elevator
             .run(() -> m_Elevator.elevSet(60.0))
-            .until(() -> Math.abs(m_Elevator.getPosition() - 60.0) < 0.5));
+            .until(() -> Math.abs(m_Elevator.getPosition() - 60.0) < 0.3));
 
     // Register end effector activation command
     NamedCommands.registerCommand(
@@ -116,7 +116,7 @@ public class RobotContainer {
         "elevatorToHome",
         m_Elevator
             .run(() -> m_Elevator.elevSet(0.0))
-            .until(() -> Math.abs(m_Elevator.getPosition()) < 0.5));
+            .until(() -> Math.abs(m_Elevator.getPosition()) < 0.3));
   }
 
   /** Setup autonomous command chooser */
