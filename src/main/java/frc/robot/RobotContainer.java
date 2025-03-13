@@ -79,9 +79,12 @@ public class RobotContainer {
     operatorXbox.b().onTrue(m_Elevator.run(() -> m_Elevator.elevSet(10.29)));
     operatorXbox.y().onTrue(m_Elevator.run(() -> m_Elevator.elevSet(60.0)));
 
-    operatorXbox.leftBumper().whileTrue(m_Intake.run(() -> m_Intake.set(0.5)));
-    operatorXbox.x().whileTrue(m_Dealgaefier.run(() -> m_Dealgaefier.set(0.5)));
-    operatorXbox.rightBumper().whileTrue(m_EndEffector.run(() -> m_EndEffector.set(0.5)));
+    operatorXbox.leftBumper().whileTrue(
+      m_Intake.run(() -> m_Intake.set(0.7))
+      .until(() -> m_Intake.isCoralInside())
+      .andThen(m_Intake.run(() -> m_Intake.stop())));
+    operatorXbox.x().whileTrue(m_Dealgaefier.run(() -> m_Dealgaefier.set(0.7)));
+    operatorXbox.rightBumper().whileTrue(m_EndEffector.run(() -> m_EndEffector.set(0.7)));
     operatorXbox.povUp().whileTrue(m_Elevator.run(() -> m_Elevator.elevUp()));
     operatorXbox.povDown().whileTrue(m_Elevator.run(() -> m_Elevator.elevDown()));
   }
