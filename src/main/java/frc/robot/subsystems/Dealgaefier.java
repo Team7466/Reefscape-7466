@@ -15,24 +15,23 @@ import com.ctre.phoenix.motorcontrol.can.*;
 import com.ctre.phoenix.motorcontrol.VictorSPXControlMode;
 
 public class Dealgaefier extends SubsystemBase {
-  private VictorSPX redLine;
+  private final VictorSPX redLine;
 
   public Dealgaefier() {
     redLine = new VictorSPX(DealgaefierConstants.dealgaefierMotor);
   }
 
-  
 
   public void set(double speed) {
     redLine.set(VictorSPXControlMode.PercentOutput, speed);
   }
 
   public void stop() {
-    redLine.set(0);
+    redLine.set(VictorSPXControlMode.PercentOutput, 0.0);
   }
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("Dealgaefier Output", dealgaefierMotor.getMotorOutputPercent());
+    SmartDashboard.putNumber("Dealgaefier Output", redLine.getMotorOutputPercent());
   }
 }
