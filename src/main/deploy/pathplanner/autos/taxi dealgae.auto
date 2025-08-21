@@ -1,0 +1,38 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "sequential",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "go little"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "go back"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "go forward end"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": null,
+  "choreoAuto": false
+}

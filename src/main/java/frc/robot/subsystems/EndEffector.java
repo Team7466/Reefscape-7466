@@ -41,8 +41,11 @@ public class EndEffector extends SubsystemBase {
         .appliedOutputPeriodMs(10)
         .primaryEncoderPositionPeriodMs(500)
         .primaryEncoderVelocityPeriodMs(20);
+      motorConfig.softLimit
+      .reverseSoftLimitEnabled(false)
+      .forwardSoftLimitEnabled(false);
   }
-
+ 
   public void set(double speed) {
     effectorMotor.set(speed);
   }

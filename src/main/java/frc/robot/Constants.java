@@ -21,12 +21,12 @@ public final class Constants {
   }
 
   public static class DriveConstants {
-    public static final int leftMotor = 3; // CAN ID
-    public static final int leftFollower = 4; // CAN ID
-    public static final int rightMotor = 5; // CAN ID
-    public static final int rightFollower = 6; // CAN ID
+    public static final int leftMotor = 18; // CAN ID
+    public static final int leftFollower = 17; // CAN ID
+    public static final int rightMotor = 11; // CAN ID
+    public static final int rightFollower = 10; // CAN ID
 
-    public static final double trackWidthMeters = 0.5308; // meters
+    public static final double trackWidthMeters = 0.533; // meters
     public static final double gearRatio = 10.71428;
     public static final double maxSpeed = 4.23; // meters per second
     public static final double wheelCircumference = Units.inchesToMeters(5.97 * Math.PI);
@@ -38,16 +38,16 @@ public final class Constants {
   public static class ElevatorConstants {
     public static final double positionConversionFactor = 10.29; // cm per rotation;
     public static final double velocityConversionFactor = 1.0;
-    public static final int elevMotor = 8; // CAN ID
-    public static final int elevFollower = 9; // CAN ID
+    public static final int elevMotor = 14; // CAN ID
+    public static final int elevFollower = 15; // CAN ID
   }
 
   public static class EndEffectorConstants {
-    public static final int endEffectorMotor = 10; // CAN ID
+    public static final int endEffectorMotor = 16; // CAN ID
   }
 
   public static class IntakeConstants {
-    public static final int intakeMotor = 11; // CAN ID
+    public static final int intakeMotor = 13; // CAN ID
     public static int beamBreak = 2; // DIO
   }
 

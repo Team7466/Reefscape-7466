@@ -33,9 +33,7 @@ public class Robot extends TimedRobot {
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
     RobotController.setBrownoutVoltage(6.1);
-    DataLogManager.start();
-    URCL.start();
-    DriverStation.startDataLog(DataLogManager.getLog(), true);
+   // DriverStation.startDataLog(DataLogManager.getLog(), true);
   }
 
   /**

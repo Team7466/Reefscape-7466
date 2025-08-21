@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandPS5Controller;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -40,6 +41,8 @@ public class RobotContainer {
 
   private final CommandPS5Controller driverPS =
       new CommandPS5Controller(OperatorConstants.kDriverControllerPort);
+      private final CommandPS5Controller operatorPS =
+      new CommandPS5Controller(OperatorConstants.kOperatorControllerPort);
 
   private final CommandXboxController operatorXbox =
       new CommandXboxController(OperatorConstants.kOperatorControllerPort);
@@ -58,13 +61,14 @@ public class RobotContainer {
     configureBindings();
 
     m_DriveSubsystem.setDefaultCommand(
+      
         m_DriveSubsystem.driveCommand(
             () -> speed * -driverPS.getLeftY(), () -> -driverPS.getRightX()));
 
-    m_Elevator.setDefaultCommand(m_Elevator.run(() -> m_Elevator.elevStop()));
-    m_EndEffector.setDefaultCommand(m_EndEffector.run(() -> m_EndEffector.stop()));
-    m_Dealgaefier.setDefaultCommand(m_Dealgaefier.run(() -> m_Dealgaefier.stop()));
-    m_Intake.setDefaultCommand(m_Intake.run(() -> m_Intake.stop()));
+    m_Elevator.setDefaultCommand(m_Elevator.run(() -> m_Elevator.elevHold()));
+    m_EndEffector.setDefaultCommand(m_EndEffector.run(() -> m_EndEffector.set(0.0)));
+    m_Dealgaefier.setDefaultCommand(m_Dealgaefier.run(() -> m_Dealgaefier.set(0.0)));
+    m_Intake.setDefaultCommand(m_Intake.run(() -> m_Intake.set(0.0)));
 
     // Setup auto chooser
     setupAutoChooser();
@@ -76,9 +80,9 @@ public class RobotContainer {
     NamedCommands.registerCommand(
         "runIntake",
         m_Intake
-            .run(() -> m_Intake.set(0.7))
+            .run(() -> m_Intake.set(0.3))
             .until(() -> m_Intake.isCoralInside())
-            .andThen(m_Intake.run(() -> m_Intake.stop())));
+            .andThen(m_Intake.run(() -> m_Intake.set(0))));
 
     // Register elevator to mid height command
     NamedCommands.registerCommand(
@@ -121,12 +125,21 @@ public class RobotContainer {
   /** Setup autonomous command chooser */
   private void setupAutoChooser() {
     // Set default auto
-    m_chooser.setDefaultOption("Do Nothing", new WaitCommand(10));
+  //  m_chooser.setDefaultOption("Taxi",  m_DriveSubsystem.getAutonomousCommand("Taxi"));
+    m_chooser.setDefaultOption("Taxi",
+      new SequentialCommandGroup(m_DriveSubsystem.driveCommand(
+        ()-> 0.6, ()-> -0.2
+        ).raceWith(new WaitCommand(3.2)),
+        m_Elevator.run(() -> m_Elevator.elevSet(-23.59)).raceWith(new WaitCommand(2.0)),
+        m_EndEffector.run(
+            (() -> m_EndEffector.set(-0.25))).alongWith(m_Intake.run(() -> m_Intake.set(-0.55))).raceWith(new WaitCommand(2.0))
+        )
+        );
     SmartDashboard.putData("OTONOM", m_chooser);
 
     // Add PathPlanner auto paths
-    m_chooser.addOption("Middle Path", m_DriveSubsystem.getAutonomousCommand("Middle Path"));
-    m_chooser.addOption("Left Path", m_DriveSubsystem.getAutonomousCommand("Left Path"));
+    m_chooser.addOption("Middle Path", m_DriveSubsystem.getAutonomousCommand("L3"));
+    m_chooser.addOption("do nothing" , new WaitCommand(10));
     m_chooser.addOption("Right Path", m_DriveSubsystem.getAutonomousCommand("Right Path"));
     m_chooser.addOption("Two Piece Path", m_DriveSubsystem.getAutonomousCommand("Two Piece Path"));
   }
@@ -146,21 +159,28 @@ public class RobotContainer {
     driverPS.R1().onFalse(Commands.run(() -> speed = 1.0));
     driverPS.triangle().whileTrue(m_Elevator.run(() -> m_Elevator.elevVoltage(0.1)));
 
-    operatorXbox.a().onTrue(m_Elevator.run(() -> m_Elevator.elevSet(0.0)));
-    operatorXbox.b().onTrue(m_Elevator.run(() -> m_Elevator.elevSet(10.29)));
-    operatorXbox.y().onTrue(m_Elevator.run(() -> m_Elevator.elevSet(60.0)));
+    operatorPS.cross().onTrue(m_Elevator.run(() -> m_Elevator.elevSet(0.0)));
+    operatorPS.circle().onTrue(m_Elevator.run(() -> m_Elevator.elevSet(-23.59)));
+    operatorPS.triangle().onTrue(m_Elevator.run(() -> m_Elevator.elevSet(-62.0)));
 
-    operatorXbox
-        .leftBumper()
+    operatorPS   
+        .square()
         .whileTrue(
             m_Intake
-                .run(() -> m_Intake.set(0.7))
-                .until(() -> m_Intake.isCoralInside())
-                .andThen(m_Intake.run(() -> m_Intake.stop())));
-    operatorXbox.x().whileTrue(m_Dealgaefier.run(() -> m_Dealgaefier.set(0.7)));
-    operatorXbox.rightBumper().whileTrue(m_EndEffector.run(() -> m_EndEffector.set(0.7)));
-    operatorXbox.povUp().whileTrue(m_Elevator.run(() -> m_Elevator.elevUp()));
-    operatorXbox.povDown().whileTrue(m_Elevator.run(() -> m_Elevator.elevDown()));
+                .run(() -> m_Intake.set(-0.55))
+                //.alongWith(m_EndEffector.run(() -> m_EndEffector.set(-0.25)))
+              // .until(() -> m_Intake.isCoralInside())
+              .andThen(m_Intake.run(() -> m_Intake.set(0.0))));
+   // operatorXbox.x().whileTrue(m_Dealgaefier.run(() -> m_Dealgaefier.set(0.7)));
+    operatorPS.R1().whileTrue(m_EndEffector.run(() -> m_EndEffector.set(-0.25)));
+    operatorPS.L1().whileTrue(m_Dealgaefier.run(() -> m_Dealgaefier.set(0.33)));
+    operatorPS.povUp().whileTrue(m_Elevator.run(() -> m_Elevator.elevUp()));
+    operatorPS.povDown().whileTrue(m_Elevator.run(() -> m_Elevator.elevDown()));
+    operatorPS   
+    .povRight()
+    .whileTrue(
+        m_Intake
+            .run(() -> m_Intake.set(0.4)));
   }
 
   /**

@@ -16,6 +16,7 @@ import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.math.controller.ElevatorFeedforward;
+import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -32,8 +33,8 @@ public class Elevator extends SubsystemBase {
   private ElevatorFeedforward feedforward;
   private double kP = 0.1;
   private double kD = 0.0;
-  private double kS = 0.0;
-  private double kG = 0.125;
+  private double kS = 0.03;
+  private double kG = 0.12;
   private double kV = 0.0;
   private static double setpoint;
   public static final String kP_Key = "elev_kP";
@@ -50,6 +51,7 @@ public class Elevator extends SubsystemBase {
     elevFollowerConfig = new SparkMaxConfig();
 
     throughbEncoder = elevMotor.getAlternateEncoder();
+    throughbEncoder.setPosition(0);
     elevController = elevMotor.getClosedLoopController();
     feedforward = new ElevatorFeedforward(kS, kG, kV);
 
@@ -67,7 +69,7 @@ public class Elevator extends SubsystemBase {
         elevHeight,
         SparkMax.ControlType.kPosition,
         ClosedLoopSlot.kSlot0,
-        feedforward.calculate(throughbEncoder.getPosition() <= elevHeight ? 1.0 : -1.0),
+        feedforward.calculate(throughbEncoder.getPosition() >= elevHeight ? 1.0 : -1.0),
         ArbFFUnits.kVoltage);
 
     setpoint = elevHeight;
@@ -78,11 +80,11 @@ public class Elevator extends SubsystemBase {
   }
 
   public void elevUp() {
-    elevMotor.set(0.3);
+    elevMotor.set(-0.55);
   }
 
   public void elevDown() {
-    elevMotor.set(-0.3);
+    elevMotor.set(0.55);
   }
 
   public void elevStop() {
@@ -106,7 +108,7 @@ public class Elevator extends SubsystemBase {
         .smartCurrentLimit(50)
         .idleMode(IdleMode.kBrake)
         .openLoopRampRate(0.25)
-        .closedLoopRampRate(0.15)
+        .closedLoopRampRate(0.2)
         .voltageCompensation(12.0);
 
     elevConfig
@@ -128,7 +130,7 @@ public class Elevator extends SubsystemBase {
         .p(kP)
         .i(0)
         .d(kD)
-        .outputRange(-0.3, 0.3);
+        .outputRange(-0.58, 0.58);
 
     elevConfig
         .signals
@@ -142,15 +144,16 @@ public class Elevator extends SubsystemBase {
 
     elevConfig
         .softLimit
-        .reverseSoftLimitEnabled(true)
-        .forwardSoftLimitEnabled(true)
-        .reverseSoftLimit(0.0)
-        .forwardSoftLimit(65.0);
-
+        .reverseSoftLimitEnabled(false)
+        .forwardSoftLimitEnabled(false)
+        .reverseSoftLimit(1.0)
+        .forwardSoftLimit(-60.0);
+elevConfig.inverted(true);
     elevFollowerConfig.apply(elevConfig).follow(elevMotor);
   }
 
   public double getPosition() {
+    System.out.println(throughbEncoder.getPosition());
     return throughbEncoder.getPosition();
   }
 

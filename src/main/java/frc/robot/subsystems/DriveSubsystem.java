@@ -207,7 +207,7 @@ public class DriveSubsystem extends SubsystemBase {
   public void drive(ChassisSpeeds speeds) {
     robotDrive.arcadeDrive(
         speeds.vxMetersPerSecond / Constants.DriveConstants.maxSpeed,
-        speeds.omegaRadiansPerSecond / 6);
+        speeds.omegaRadiansPerSecond / 8);
   }
 
   public Command getAutonomousCommand(String string) {
